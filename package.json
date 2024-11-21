@@ -11,11 +11,18 @@
   "scripts": {
     "dev": "yarn build --watch",
     "build": "esbuild src/index.js --bundle --outdir=dist",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test": "jest"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "babel-jest": "^29.7.0",
     "esbuild": "^0.21.1",
     "eslint": "^8.57.0",
-    "prettier": "^3.2.5"
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.6.3"
   }
 }
