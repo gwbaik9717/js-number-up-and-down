@@ -1,16 +1,20 @@
 class Game {
-  private targetNumber: number;
+  private answer: number;
 
   constructor() {
-    this.targetNumber = this.generateTargetNumber();
+    this.answer = this.generateAnswer();
   }
 
-  private generateTargetNumber() {
+  generateAnswer() {
     return Math.floor(Math.random() * 50 + 1);
   }
 
-  getTargetNumber() {
-    return this.targetNumber;
+  getAnswer() {
+    return this.answer;
+  }
+
+  getDiffAnswer(toCompare: number) {
+    return this.answer - toCompare;
   }
 }
 
