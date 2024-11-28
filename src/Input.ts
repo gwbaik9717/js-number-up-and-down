@@ -1,9 +1,22 @@
 import readLineAsync from "./utils/readlineAsync";
+import ErrorMessage from "./error";
 
 const Input = {
   validate: (userInput: string) => {
-    if (isNaN(Number(userInput))) {
-      throw new Error("숫자를 입력해주세요.");
+    const numerifiedUserInput = Number(userInput);
+
+    if (isNaN(numerifiedUserInput)) {
+      throw new Error(ErrorMessage.WRONG_INPUT_TYPE);
+    }
+
+    const MIN_ALLOWED_NUMBER = 1;
+    const MAX_ALLOWED_NUMBER = 50;
+
+    if (
+      numerifiedUserInput < MIN_ALLOWED_NUMBER ||
+      numerifiedUserInput > MAX_ALLOWED_NUMBER
+    ) {
+      throw new Error(ErrorMessage.WRONG_INPUT_RANGE);
     }
   },
 
