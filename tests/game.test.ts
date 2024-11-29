@@ -31,4 +31,17 @@ describe("게임 Unit test", () => {
       mockGenerateAnswer.mockRestore();
     }
   );
+
+  test("사용자가 입력한 숫자는 History에 저장되어야 한다.", () => {
+    const userInputs = [1, 2, 3, 4, 5];
+
+    const game = new Game();
+
+    for (const userInput of userInputs) {
+      game.addToHistory(userInput);
+    }
+
+    const history = game.getHistory();
+    expect(history).toEqual(userInputs);
+  });
 });

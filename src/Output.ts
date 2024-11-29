@@ -8,6 +8,11 @@ const Output = {
       console.log("정답!");
     }
   },
+
+  showHistory: (history: number[]) => {
+    const renderedHistory = history.join(", ");
+    console.log(`이전 추측: ${renderedHistory}`);
+  },
 };
 
 export default Output;

@@ -17,4 +17,13 @@ describe("Output Unit test", () => {
       consoleSpy.mockRestore();
     }
   );
+
+  test("사용자가 지금까지 입력한 모든 추측들을 등록된 순으로 나열하여 보여준다.", () => {
+    const history = [1, 2, 3, 4];
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+
+    Output.showHistory(history);
+    expect(consoleSpy).toHaveBeenCalledWith("이전 추측: 1, 2, 3, 4");
+    consoleSpy.mockRestore();
+  });
 });
