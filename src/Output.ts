@@ -1,7 +1,9 @@
 import { MAX_RETRIES } from "./constants";
 
 const Output = {
-  printDiffMessage: (diff: number) => {
+  printDiffMessage: (answer: number, userInput: number) => {
+    const diff = answer - userInput;
+
     if (diff > 0) {
       console.log("업");
     } else if (diff < 0) {
@@ -14,6 +16,7 @@ const Output = {
   printHistory: (history: number[]) => {
     const renderedHistory = history.join(", ");
     console.log(`이전 추측: ${renderedHistory}`);
+    console.log();
   },
 
   printSuccessMessage: (count: number) => {

@@ -4,17 +4,17 @@ import { MAX_RETRIES } from "../src/constants";
 
 describe("Output Unit test", () => {
   test.each([
-    { diff: -1, answer: "다운" },
-    { diff: 0, answer: "정답!" },
-    { diff: 1, answer: "업" },
+    { answer: 1, userInput: 4, expected: "다운" },
+    { answer: 1, userInput: 1, expected: "정답!" },
+    { answer: 3, userInput: 1, expected: "업" },
   ])(
     "대소 관계에 따라 콘솔에 '업', '다운', '정답!' 중 하나를 출력한다.",
-    ({ diff, answer }) => {
+    ({ answer, userInput, expected }) => {
       const consoleSpy = jest
         .spyOn(console, "log")
         .mockImplementation(() => {});
-      Output.printDiffMessage(diff);
-      expect(consoleSpy).toHaveBeenCalledWith(answer);
+      Output.printDiffMessage(answer, userInput);
+      expect(consoleSpy).toHaveBeenCalledWith(expected);
       consoleSpy.mockRestore();
     }
   );
