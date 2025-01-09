@@ -22,8 +22,20 @@ describe("Output Unit test", () => {
     const history = [1, 2, 3, 4];
     const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
 
-    Output.showHistory(history);
+    Output.printHistory(history);
     expect(consoleSpy).toHaveBeenCalledWith("이전 추측: 1, 2, 3, 4");
+    consoleSpy.mockRestore();
+  });
+
+  test("사용자가 입력한 숫자가 정답과 같으면 '정답!' 과 몇 회만에 맞췄는지 출력한다.", () => {
+    const count = 5;
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+
+    Output.printSuccessMessage(count);
+    expect(consoleSpy).toHaveBeenCalledWith("정답!");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      `축하합니다! ${count}번 만에 숫자를 맞추셨습니다.`
+    );
     consoleSpy.mockRestore();
   });
 });
