@@ -29,7 +29,7 @@ const Input = {
 
   getUserNumber: async () => {
     while (true) {
-      const userInput = await readLineAsync("숫자 입력:");
+      const userInput = await readLineAsync("숫자 입력:\n");
 
       try {
         Input.validateUserNumber(userInput);

@@ -1,4 +1,6 @@
 import { MAX_RETRIES } from "../constants";
+import Input from "../Input";
+import Output from "../Output";
 
 class Game {
   private answer: number;
@@ -6,6 +8,23 @@ class Game {
 
   constructor() {
     this.answer = this.generateAnswer();
+  }
+
+  async start() {
+    while (this.history.length < MAX_RETRIES) {
+      const userNumber = await Input.getUserNumber();
+      this.addToHistory(userNumber);
+
+      if (userNumber === this.answer) {
+        Output.printSuccessMessage(this.history.length);
+        return;
+      }
+
+      Output.printDiffMessage(this.answer, userNumber);
+      Output.printHistory(this.history);
+    }
+
+    Output.printExceedRetriesCountMessgae(this.answer);
   }
 
   generateAnswer() {
