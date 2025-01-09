@@ -1,13 +1,17 @@
 import { describe, expect, test, jest } from "@jest/globals";
 import Game from "../src/domain/Game";
-import { MAX_ALLOWED_NUMBER, MAX_RETRIES } from "../src/constants";
+import {
+  MAX_ALLOWED_NUMBER,
+  MAX_RETRIES,
+  MIN_ALLOWED_NUMBER,
+} from "../src/constants";
 describe("게임 Unit test", () => {
   test("게임을 시작하면 컴퓨터는 1부터 50 사이의 랜덤 숫자를 생성한다.", () => {
     const game = new Game();
 
     const answer = game.getAnswer();
-    expect(answer).toBeGreaterThanOrEqual(1);
-    expect(answer).toBeLessThanOrEqual(50);
+    expect(answer).toBeGreaterThanOrEqual(MIN_ALLOWED_NUMBER);
+    expect(answer).toBeLessThanOrEqual(MAX_ALLOWED_NUMBER);
   });
 
   test.each([

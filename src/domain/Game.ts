@@ -1,6 +1,7 @@
-import { MAX_RETRIES } from "../constants";
-import Input from "../Input";
-import Output from "../Output";
+import { MAX_ALLOWED_NUMBER, MAX_RETRIES } from "../constants";
+import ErrorMessage from "../error";
+import Input from "./Input";
+import Output from "./Output";
 
 class Game {
   private answer: number;
@@ -28,7 +29,7 @@ class Game {
   }
 
   generateAnswer() {
-    return Math.floor(Math.random() * 50 + 1);
+    return Math.floor(Math.random() * MAX_ALLOWED_NUMBER + 1);
   }
 
   getAnswer() {
@@ -45,7 +46,7 @@ class Game {
       return;
     }
 
-    throw new Error(`최대 시도 횟수는 ${MAX_RETRIES}번 입니다.`);
+    throw new Error(ErrorMessage.game.EXCEED_MAX_RETRIES);
   }
 
   getHistory() {

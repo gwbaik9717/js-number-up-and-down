@@ -1,5 +1,5 @@
 import Game from "./domain/Game";
-import Input from "./Input";
+import Input from "./domain/Input";
 
 const main = async () => {
   while (true) {

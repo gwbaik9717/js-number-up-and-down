@@ -1,20 +1,20 @@
-import readLineAsync from "./utils/readlineAsync";
-import ErrorMessage from "./error";
-import { MAX_ALLOWED_NUMBER, MIN_ALLOWED_NUMBER } from "./constants";
+import readLineAsync from "../utils/readlineAsync";
+import ErrorMessage from "../error";
+import { MAX_ALLOWED_NUMBER, MIN_ALLOWED_NUMBER } from "../constants";
 
 const Input = {
   validateUserNumber: (userInput: string) => {
     const numerifiedUserInput = Number(userInput);
 
     if (isNaN(numerifiedUserInput)) {
-      throw new Error(ErrorMessage.WRONG_INPUT_TYPE);
+      throw new Error(ErrorMessage.input.WRONG_INPUT_TYPE);
     }
 
     if (
       numerifiedUserInput < MIN_ALLOWED_NUMBER ||
       numerifiedUserInput > MAX_ALLOWED_NUMBER
     ) {
-      throw new Error(ErrorMessage.WRONG_INPUT_RANGE);
+      throw new Error(ErrorMessage.input.WRONG_INPUT_RANGE);
     }
   },
 
@@ -23,7 +23,7 @@ const Input = {
     const allowedUserInputs = ["yes", "no"];
 
     if (!allowedUserInputs.includes(normalizedUserInput)) {
-      throw new Error(ErrorMessage.WRONG_RETRY_OPTION);
+      throw new Error(ErrorMessage.input.WRONG_RETRY_OPTION);
     }
   },
 

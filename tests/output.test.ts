@@ -1,5 +1,5 @@
 import { describe, expect, test, jest } from "@jest/globals";
-import Output from "../src/Output";
+import Output from "../src/domain/Output";
 import { MAX_RETRIES } from "../src/constants";
 
 describe("Output Unit test", () => {

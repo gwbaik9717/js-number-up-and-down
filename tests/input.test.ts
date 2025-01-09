@@ -1,5 +1,5 @@
 import { describe, expect, test, jest } from "@jest/globals";
-import Input from "../src/Input";
+import Input from "../src/domain/Input";
 import ErrorMessage from "../src/error";
 
 describe("Input Unit test", () => {
@@ -18,7 +18,9 @@ describe("Input Unit test", () => {
 
     Input.getUserNumber().then((value) => {
       expect(mockReadLineAsync).toHaveBeenCalledTimes(3);
-      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessage.WRONG_INPUT_TYPE);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        ErrorMessage.input.WRONG_INPUT_TYPE
+      );
       expect(value).toBe(1);
 
       consoleSpy.mockRestore();
@@ -40,7 +42,9 @@ describe("Input Unit test", () => {
 
     Input.getUserNumber().then((value) => {
       expect(mockReadLineAsync).toHaveBeenCalledTimes(3);
-      expect(consoleSpy).toHaveBeenCalledWith(ErrorMessage.WRONG_INPUT_RANGE);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        ErrorMessage.input.WRONG_INPUT_RANGE
+      );
       expect(value).toBe(1);
 
       consoleSpy.mockRestore();
@@ -83,7 +87,7 @@ describe("Input Unit test", () => {
     async ({ userInput }) => {
       expect(() => {
         Input.validateUserRetryOption(userInput);
-      }).toThrow(ErrorMessage.WRONG_RETRY_OPTION);
+      }).toThrow(ErrorMessage.input.WRONG_RETRY_OPTION);
     }
   );
 });

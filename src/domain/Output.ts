@@ -1,4 +1,4 @@
-import { MAX_RETRIES } from "./constants";
+import { MAX_RETRIES } from "../constants";
 
 const Output = {
   printDiffMessage: (answer: number, userInput: number) => {
