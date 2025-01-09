@@ -1,5 +1,6 @@
 import { describe, expect, test, jest } from "@jest/globals";
 import Game from "../src/domain/Game";
+import { MAX_ALLOWED_NUMBER, MAX_RETRIES } from "../src/constants";
 describe("게임 Unit test", () => {
   test("게임을 시작하면 컴퓨터는 1부터 50 사이의 랜덤 숫자를 생성한다.", () => {
     const game = new Game();
@@ -43,5 +44,37 @@ describe("게임 Unit test", () => {
 
     const history = game.getHistory();
     expect(history).toEqual(userInputs);
+  });
+
+  test(`사용자는 최대 ${MAX_RETRIES}번까지 정답을 맞출 수 있다.`, () => {
+    const game = new Game();
+    const userInputs = Array.from({ length: MAX_RETRIES }, (_, i) => i + 1);
+
+    for (let i = 0; i < MAX_RETRIES; i++) {
+      const userInput = userInputs[i];
+      game.addToHistory(userInput);
+    }
+
+    const history = game.getHistory();
+
+    expect(history.length).toBe(MAX_RETRIES);
+  });
+
+  test("사용자가 5번 초과 시도를 할 경우 에러가 발생한다.", () => {
+    const game = new Game();
+    const overflowedRetries = MAX_RETRIES + 1;
+    const userInputs = Array.from(
+      { length: overflowedRetries },
+      (_, i) => i + 1
+    );
+
+    const startGame = () => {
+      for (let i = 0; i < overflowedRetries; i++) {
+        const userInput = userInputs[i];
+        game.addToHistory(userInput);
+      }
+    };
+
+    expect(startGame).toThrow(`최대 시도 횟수는 ${MAX_RETRIES}번 입니다.`);
   });
 });

@@ -1,3 +1,5 @@
+import { MAX_RETRIES } from "../constants";
+
 class Game {
   private answer: number;
   private history: number[] = [];
@@ -19,7 +21,12 @@ class Game {
   }
 
   addToHistory(userInput: number) {
-    this.history.push(userInput);
+    if (this.history.length < MAX_RETRIES) {
+      this.history.push(userInput);
+      return;
+    }
+
+    throw new Error(`최대 시도 횟수는 ${MAX_RETRIES}번 입니다.`);
   }
 
   getHistory() {
