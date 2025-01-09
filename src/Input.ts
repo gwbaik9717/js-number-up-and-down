@@ -1,5 +1,6 @@
 import readLineAsync from "./utils/readlineAsync";
 import ErrorMessage from "./error";
+import { MAX_ALLOWED_NUMBER, MIN_ALLOWED_NUMBER } from "./constants";
 
 const Input = {
   validate: (userInput: string) => {
@@ -8,9 +9,6 @@ const Input = {
     if (isNaN(numerifiedUserInput)) {
       throw new Error(ErrorMessage.WRONG_INPUT_TYPE);
     }
-
-    const MIN_ALLOWED_NUMBER = 1;
-    const MAX_ALLOWED_NUMBER = 50;
 
     if (
       numerifiedUserInput < MIN_ALLOWED_NUMBER ||
