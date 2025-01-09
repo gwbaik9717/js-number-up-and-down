@@ -1,5 +1,6 @@
 import { describe, expect, test, jest } from "@jest/globals";
 import Output from "../src/Output";
+import { MAX_RETRIES } from "../src/constants";
 
 describe("Output Unit test", () => {
   test.each([
@@ -35,6 +36,17 @@ describe("Output Unit test", () => {
     expect(consoleSpy).toHaveBeenCalledWith("정답!");
     expect(consoleSpy).toHaveBeenCalledWith(
       `축하합니다! ${count}번 만에 숫자를 맞추셨습니다.`
+    );
+    consoleSpy.mockRestore();
+  });
+
+  test(`${MAX_RETRIES}회 이내에 맞추지 못하면 '${MAX_RETRIES}회 초과! 숫자를 맞추지 못했습니다. (정답: 00)'를 출력한다.`, () => {
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    const answer = 1;
+
+    Output.printExceedRetriesCountMessgae(answer);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      `${MAX_RETRIES}회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`
     );
     consoleSpy.mockRestore();
   });
