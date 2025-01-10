@@ -9,8 +9,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --watch --loader:.css=text\" \"tailwindcss -i src/styles.css -o dist/styles.css --watch\"",
-    "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --loader:.css=text && npx tailwindcss -i src/styles.css -o dist/styles.css",
+    "dev": "concurrently \"esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --watch --loader:.css=text\" \"tailwindcss -i ./styles.css -o ./dist/styles.css --watch\"",
+    "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --loader:.css=text && npx tailwindcss -i ./styles.css -o ./dist/styles.css",
     "test": "jest --runInBand --detectOpenHandles --forceExit"
   },
   "devDependencies": {
