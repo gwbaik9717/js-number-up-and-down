@@ -31,19 +31,27 @@ const Input = {
     const splitted = userInput.split(",");
 
     if (splitted.length !== 2) {
-      throw new Error();
+      throw new Error(ErrorMessage.input.WRONG_ANSWER_RANGE);
     }
 
-    const [start, end] = splitted;
+    const [start, end] = splitted.map((item) => item.trim());
 
     if (isNaN(Number(start)) || isNaN(Number(end))) {
-      throw new Error();
+      throw new Error(ErrorMessage.input.WRONG_ANSWER_RANGE);
+    }
+
+    if (start > end) {
+      throw new Error(ErrorMessage.input.WRONG_ANSWER_RANGE);
     }
   },
 
   validateUserRetryCount: (userInput: string) => {
     if (isNaN(Number(userInput))) {
-      throw new Error();
+      throw new Error(ErrorMessage.input.WRONG_RETRY_COUNT);
+    }
+
+    if (Number(userInput) <= 0) {
+      throw new Error(ErrorMessage.input.WRONG_RETRY_COUNT);
     }
   },
 
@@ -95,9 +103,11 @@ const Input = {
       try {
         Input.validateUserAnswerRange(userInput);
 
-        const [start, end] = userInput.split(",");
+        const [start, end] = userInput
+          .split(",")
+          .map((input) => Number(input.trim()));
 
-        return [Number(start), Number(end)];
+        return [start, end];
       } catch (e: unknown) {
         if (e instanceof Error) {
           console.log(e.message);

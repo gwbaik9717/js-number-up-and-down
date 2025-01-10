@@ -108,6 +108,20 @@ describe("Input Unit test", () => {
     consoleSpy.mockRestore();
   });
 
+  test.each([
+    { userInput: "1" },
+    { userInput: "10,1" },
+    { userInput: "a" },
+    { userInput: "1, a2" },
+  ])(
+    "잘못된 양식으로 최소 값, 최대 값을 입력하면, 에러메시지를 출력한다.",
+    async ({ userInput }) => {
+      expect(() => {
+        Input.validateUserAnswerRange(userInput);
+      }).toThrow(ErrorMessage.input.WRONG_ANSWER_RANGE);
+    }
+  );
+
   test("게임을 시작하면 진행 가능 횟수를 유저에게 물어본다.", () => {
     const mockReadLineAsync = jest.fn().mockReturnValueOnce("5");
     jest.mock("../src/utils/readLineAsync", () => ({
@@ -124,4 +138,13 @@ describe("Input Unit test", () => {
     });
     consoleSpy.mockRestore();
   });
+
+  test.each([{ userInput: "0" }, { userInput: "-1" }, { userInput: "a" }])(
+    "잘못된 양식으로 진행 가능 횟수를 입력하면, 에러메시지를 출력한다.",
+    async ({ userInput }) => {
+      expect(() => {
+        Input.validateUserRetryCount(userInput);
+      }).toThrow(ErrorMessage.input.WRONG_RETRY_COUNT);
+    }
+  );
 });
