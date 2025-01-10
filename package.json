@@ -9,20 +9,23 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --watch",
-    "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm",
-    "start": "yarn build && node dist/index.js",
+    "dev": "yarn build && esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --watch --loader:.css=text",
+    "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --loader:.css=text && npx tailwindcss -i src/styles.css -o dist/styles.css",
     "test": "jest --runInBand --detectOpenHandles --forceExit"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
+    "autoprefixer": "^10.4.20",
     "babel-jest": "^29.7.0",
     "esbuild": "^0.21.1",
+    "esbuild-plugin-postcss": "^0.2.1",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",
+    "postcss": "^8.4.49",
     "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.6.3"
   }
 }
