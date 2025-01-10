@@ -90,4 +90,38 @@ describe("Input Unit test", () => {
       }).toThrow(ErrorMessage.input.WRONG_RETRY_OPTION);
     }
   );
+
+  test("게임을 시작하면 최소 값, 최대 값을 유저에게 물어본다.", () => {
+    const mockReadLineAsync = jest.fn().mockReturnValueOnce("1, 50");
+    jest.mock("../src/utils/readLineAsync", () => ({
+      readLineAsync: mockReadLineAsync,
+    }));
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    const expected = [1, 50];
+
+    Input.getUserAnswerRange().then((value) => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)"
+      );
+      expect(value).toEqual(expected);
+    });
+    consoleSpy.mockRestore();
+  });
+
+  test("게임을 시작하면 진행 가능 횟수를 유저에게 물어본다.", () => {
+    const mockReadLineAsync = jest.fn().mockReturnValueOnce("5");
+    jest.mock("../src/utils/readLineAsync", () => ({
+      readLineAsync: mockReadLineAsync,
+    }));
+    const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    const expected = 5;
+
+    Input.getUserRetryCount().then((value) => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        "[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요."
+      );
+      expect(value).toBe(expected);
+    });
+    consoleSpy.mockRestore();
+  });
 });

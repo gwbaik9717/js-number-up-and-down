@@ -27,6 +27,26 @@ const Input = {
     }
   },
 
+  validateUserAnswerRange: (userInput: string) => {
+    const splitted = userInput.split(",");
+
+    if (splitted.length !== 2) {
+      throw new Error();
+    }
+
+    const [start, end] = splitted;
+
+    if (isNaN(Number(start)) || isNaN(Number(end))) {
+      throw new Error();
+    }
+  },
+
+  validateUserRetryCount: (userInput: string) => {
+    if (isNaN(Number(userInput))) {
+      throw new Error();
+    }
+  },
+
   getUserNumber: async () => {
     while (true) {
       const userInput = await readLineAsync("숫자 입력:\n");
@@ -58,6 +78,44 @@ const Input = {
         }
 
         return false;
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        }
+      }
+    }
+  },
+
+  getUserAnswerRange: async () => {
+    while (true) {
+      const userInput = await readLineAsync(
+        "[게임 설정] 게임 시작을 위해 최소 값, 최대 값을 입력해주세요. (예: 1, 50)"
+      );
+
+      try {
+        Input.validateUserAnswerRange(userInput);
+
+        const [start, end] = userInput.split(",");
+
+        return [Number(start), Number(end)];
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        }
+      }
+    }
+  },
+
+  getUserRetryCount: async () => {
+    while (true) {
+      const userInput = await readLineAsync(
+        "[게임 설정] 게임 시작을 위해 진행 가능 횟수를 입력해주세요."
+      );
+
+      try {
+        Input.validateUserRetryCount(userInput);
+
+        return Number(userInput);
       } catch (e: unknown) {
         if (e instanceof Error) {
           console.log(e.message);
