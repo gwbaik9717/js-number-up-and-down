@@ -9,7 +9,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "yarn build && esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --watch --loader:.css=text",
+    "dev": "concurrently \"esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --watch --loader:.css=text\" \"tailwindcss -i src/styles.css -o dist/styles.css --watch\"",
     "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --target=esnext --format=esm --loader:.css=text && npx tailwindcss -i src/styles.css -o dist/styles.css",
     "test": "jest --runInBand --detectOpenHandles --forceExit"
   },
@@ -19,6 +19,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "autoprefixer": "^10.4.20",
     "babel-jest": "^29.7.0",
+    "concurrently": "^9.1.2",
     "esbuild": "^0.21.1",
     "esbuild-plugin-postcss": "^0.2.1",
     "eslint": "^8.57.0",
