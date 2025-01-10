@@ -29,10 +29,6 @@ class Game {
     return this.answer;
   }
 
-  getDiffAnswer(toCompare: number) {
-    return this.answer - toCompare;
-  }
-
   addToHistory(userInput: number) {
     if (this.history.length < this.maxRetries) {
       this.history.push(userInput);
