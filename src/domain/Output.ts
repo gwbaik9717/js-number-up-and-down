@@ -1,5 +1,3 @@
-import { MAX_RETRIES } from "../constants";
-
 const Output = {
   printDiffMessage: (answer: number, userInput: number) => {
     const diff = answer - userInput;
@@ -24,9 +22,9 @@ const Output = {
     console.log(`축하합니다! ${count}번 만에 숫자를 맞추셨습니다.`);
   },
 
-  printExceedRetriesCountMessgae: (answer: number) => {
+  printExceedRetriesCountMessgae: (answer: number, maxRetries: number) => {
     console.log(
-      `${MAX_RETRIES}회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`
+      `${maxRetries}회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`
     );
   },
 };

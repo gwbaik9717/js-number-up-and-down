@@ -1,4 +1,3 @@
-import { MAX_ALLOWED_NUMBER, MAX_RETRIES } from "../constants";
 import ErrorMessage from "../error";
 import Input from "./Input";
 import Output from "./Output";
@@ -6,14 +5,27 @@ import Output from "./Output";
 class Game {
   private answer: number;
   private history: number[] = [];
+  private maxRetries: number;
+  private minAllowedNumber: number;
+  private maxAllowedNumber: number;
 
-  constructor() {
+  constructor(
+    minAllowedNumber: number,
+    maxAllowedNumber: number,
+    maxRetries: number
+  ) {
+    this.minAllowedNumber = minAllowedNumber;
+    this.maxAllowedNumber = maxAllowedNumber;
+    this.maxRetries = maxRetries;
     this.answer = this.generateAnswer();
   }
 
   async start() {
-    while (this.history.length < MAX_RETRIES) {
-      const userNumber = await Input.getUserNumber();
+    while (this.history.length < this.maxRetries) {
+      const userNumber = await Input.getUserNumber(
+        this.minAllowedNumber,
+        this.maxAllowedNumber
+      );
       this.addToHistory(userNumber);
 
       if (userNumber === this.answer) {
@@ -25,11 +37,14 @@ class Game {
       Output.printHistory(this.history);
     }
 
-    Output.printExceedRetriesCountMessgae(this.answer);
+    Output.printExceedRetriesCountMessgae(this.answer, this.maxRetries);
   }
 
   generateAnswer() {
-    return Math.floor(Math.random() * MAX_ALLOWED_NUMBER + 1);
+    return Math.floor(
+      Math.random() * (this.maxAllowedNumber - this.minAllowedNumber + 1) +
+        this.minAllowedNumber
+    );
   }
 
   getAnswer() {
@@ -41,7 +56,7 @@ class Game {
   }
 
   addToHistory(userInput: number) {
-    if (this.history.length < MAX_RETRIES) {
+    if (this.history.length < this.maxRetries) {
       this.history.push(userInput);
       return;
     }

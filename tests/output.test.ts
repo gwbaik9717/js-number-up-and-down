@@ -1,7 +1,7 @@
 import { describe, expect, test, jest } from "@jest/globals";
 import Output from "../src/domain/Output";
-import { MAX_RETRIES } from "../src/constants";
 
+const MAX_RETRIES = 5;
 describe("Output Unit test", () => {
   test.each([
     { answer: 1, userInput: 4, expected: "다운" },
@@ -44,7 +44,7 @@ describe("Output Unit test", () => {
     const consoleSpy = jest.spyOn(console, "log").mockImplementation(() => {});
     const answer = 1;
 
-    Output.printExceedRetriesCountMessgae(answer);
+    Output.printExceedRetriesCountMessgae(answer, MAX_RETRIES);
     expect(consoleSpy).toHaveBeenCalledWith(
       `${MAX_RETRIES}회 초과! 숫자를 맞추지 못했습니다. (정답: ${answer})`
     );

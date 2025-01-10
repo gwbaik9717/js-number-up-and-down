@@ -1,9 +1,12 @@
 import readLineAsync from "../utils/readlineAsync";
 import ErrorMessage from "../error";
-import { MAX_ALLOWED_NUMBER, MIN_ALLOWED_NUMBER } from "../constants";
 
 const Input = {
-  validateUserNumber: (userInput: string) => {
+  validateUserNumber: (
+    userInput: string,
+    minAllowedNumber: number,
+    maxAllowedNumber: number
+  ) => {
     const numerifiedUserInput = Number(userInput);
 
     if (isNaN(numerifiedUserInput)) {
@@ -11,14 +14,14 @@ const Input = {
     }
 
     if (
-      numerifiedUserInput < MIN_ALLOWED_NUMBER ||
-      numerifiedUserInput > MAX_ALLOWED_NUMBER
+      numerifiedUserInput < minAllowedNumber ||
+      numerifiedUserInput > maxAllowedNumber
     ) {
       throw new Error(ErrorMessage.input.WRONG_INPUT_RANGE);
     }
   },
 
-  validateUserRetryOption: (userInput: string) => {
+  validateUserRestartOption: (userInput: string) => {
     const normalizedUserInput = userInput.toLowerCase();
     const allowedUserInputs = ["yes", "no"];
 
@@ -55,12 +58,12 @@ const Input = {
     }
   },
 
-  getUserNumber: async () => {
+  getUserNumber: async (minAllowedNumber: number, maxAllowedNumber: number) => {
     while (true) {
       const userInput = await readLineAsync("숫자 입력:\n");
 
       try {
-        Input.validateUserNumber(userInput);
+        Input.validateUserNumber(userInput, minAllowedNumber, maxAllowedNumber);
         return Number(userInput);
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -70,14 +73,14 @@ const Input = {
     }
   },
 
-  getUserRetryOption: async () => {
+  getUserRestartOption: async () => {
     while (true) {
       const userInput = await readLineAsync(
         "게임을 다시 시작하시겠습니까? (yes/no):"
       );
 
       try {
-        Input.validateUserRetryOption(userInput);
+        Input.validateUserRestartOption(userInput);
 
         const normalizedUserInput = userInput.toLowerCase();
 
