@@ -2,10 +2,12 @@ import Game from "./domain/Game";
 import Input from "./Input";
 import Output from "./Output";
 import { $ } from "./utils/dom";
+import { GameMain } from "./view/GameMain";
 import { GameSettings } from "./view/GameSettings";
 
 const main = async () => {
-  GameSettings.render();
+  // GameSettings.render();
+  GameMain.render();
 
   // while (true) {
   //   const [minAllowedNumber, maxAllowedNumber] =
