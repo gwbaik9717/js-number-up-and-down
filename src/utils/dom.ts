@@ -1,5 +1,7 @@
-export const $ = (selector: string, parent = document) =>
-  parent.querySelector<HTMLElement>(selector);
+export const $ = <T extends HTMLElement = HTMLElement>(
+  selector: string,
+  parent = document
+) => parent.querySelector<T>(selector);
 
 export const $all = (selector: string, parent = document) => [
   ...parent.querySelectorAll<HTMLElement>(selector),

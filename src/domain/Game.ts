@@ -1,6 +1,6 @@
 import ErrorMessage from "../error";
 
-class Game {
+export class Game {
   private answer: number;
   private history: number[] = [];
   private maxRetries: number;
@@ -42,5 +42,3 @@ class Game {
     return [...this.history];
   }
 }
-
-export default Game;
