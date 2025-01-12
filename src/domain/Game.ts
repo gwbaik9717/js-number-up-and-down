@@ -1,8 +1,8 @@
 import ErrorMessage from "../error";
 
 export class Game {
-  private answer: number;
-  private history: number[] = [];
+  private _answer: number;
+  private _history: number[] = [];
   private maxRetries: number;
   private minAllowedNumber: number;
   private maxAllowedNumber: number;
@@ -15,30 +15,30 @@ export class Game {
     this.minAllowedNumber = minAllowedNumber;
     this.maxAllowedNumber = maxAllowedNumber;
     this.maxRetries = maxRetries;
-    this.answer = this.generateAnswer();
+    this._answer = this.generateAnswer();
   }
 
-  generateAnswer() {
+  get answer() {
+    return this._answer;
+  }
+
+  get history() {
+    return [...this._history];
+  }
+
+  private generateAnswer() {
     return Math.floor(
       Math.random() * (this.maxAllowedNumber - this.minAllowedNumber + 1) +
         this.minAllowedNumber
     );
   }
 
-  getAnswer() {
-    return this.answer;
-  }
-
   addToHistory(userInput: number) {
-    if (this.history.length < this.maxRetries) {
-      this.history.push(userInput);
+    if (this._history.length < this.maxRetries) {
+      this._history.push(userInput);
       return;
     }
 
     throw new Error(ErrorMessage.game.EXCEED_MAX_RETRIES);
-  }
-
-  getHistory() {
-    return [...this.history];
   }
 }

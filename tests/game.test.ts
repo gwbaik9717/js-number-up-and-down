@@ -1,5 +1,5 @@
 import { describe, expect, test, jest } from "@jest/globals";
-import Game from "../src/domain/Game";
+import { Game } from "../src/domain/Game";
 import ErrorMessage from "../src/error";
 
 const MIN_ALLOWED_NUMBER = 1;
@@ -9,7 +9,7 @@ describe("게임 Unit test", () => {
   test("게임을 시작하면 컴퓨터는 주어진 범위 안에서 랜덤 숫자를 생성한다.", () => {
     const game = new Game(MIN_ALLOWED_NUMBER, MAX_ALLOWED_NUMBER, MAX_RETRIES);
 
-    const answer = game.getAnswer();
+    const answer = game.answer;
     expect(answer).toBeGreaterThanOrEqual(MIN_ALLOWED_NUMBER);
     expect(answer).toBeLessThanOrEqual(MAX_ALLOWED_NUMBER);
   });
@@ -23,7 +23,7 @@ describe("게임 Unit test", () => {
       game.addToHistory(userInput);
     }
 
-    const history = game.getHistory();
+    const history = game.history;
     expect(history).toEqual(userInputs);
   });
 
@@ -36,7 +36,7 @@ describe("게임 Unit test", () => {
       game.addToHistory(userInput);
     }
 
-    const history = game.getHistory();
+    const history = game.history;
 
     expect(history.length).toBe(MAX_RETRIES);
   });
