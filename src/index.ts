@@ -7,7 +7,7 @@ const main = async () => {
   SectionGameSettings.render();
 
   const InputMinNumberRange = SectionGameSettings.elements.inputMinNumberRange;
-  InputMinNumberRange?.addEventListener("change", (e) => {
+  const onMinNumberRangeChange = (e: Event) => {
     const minNumberRange = (e.target as HTMLInputElement).value;
     const maxNumberRange =
       SectionGameSettings.elements.inputMaxNumberRange?.value ?? null;
@@ -15,13 +15,17 @@ const main = async () => {
     try {
       Input.validateUserAnswerRange(minNumberRange, maxNumberRange);
     } catch (e) {
-      InputMinNumberRange.value = "";
       alert(e);
+
+      if (InputMinNumberRange) {
+        InputMinNumberRange.value = "";
+      }
     }
-  });
+  };
+  InputMinNumberRange?.addEventListener("change", onMinNumberRangeChange);
 
   const InputMaxNumberRange = SectionGameSettings.elements.inputMaxNumberRange;
-  InputMaxNumberRange?.addEventListener("change", (e) => {
+  const onMaxNumberRangeChange = (e: Event) => {
     const minNumberRange =
       SectionGameSettings.elements.inputMinNumberRange?.value ?? null;
     const maxNumberRange = (e.target as HTMLInputElement).value;
@@ -30,69 +34,152 @@ const main = async () => {
       Input.validateUserAnswerRange(minNumberRange, maxNumberRange);
     } catch (e) {
       alert(e);
-      InputMaxNumberRange.value = "";
-    }
-  });
 
-  const InputRetryCount = SectionGameSettings.elements.inputRetryCount;
-  InputRetryCount?.addEventListener("change", (e) => {
-    const retryCount = (e.target as HTMLInputElement).value;
+      if (InputMaxNumberRange) {
+        InputMaxNumberRange.value = "";
+      }
+    }
+  };
+  InputMaxNumberRange?.addEventListener("change", onMaxNumberRangeChange);
+
+  const InputRetryCount = SectionGameSettings.elements.inputMaxRetries;
+  const onRetryCountChange = (e: Event) => {
+    const maxRetries = (e.target as HTMLInputElement).value;
 
     try {
-      Input.validateUserRetryCount(retryCount);
+      Input.validateUserRetryCount(maxRetries);
     } catch (e) {
       alert(e);
-      InputRetryCount.value = "";
+
+      if (InputRetryCount) {
+        InputRetryCount.value = "";
+      }
     }
-  });
+  };
+  InputRetryCount?.addEventListener("change", onRetryCountChange);
 
-  let game = null;
-
-  SectionGameSettings.elements.btnStartGame?.addEventListener("click", () => {
-    const minNumberRange = InputMaxNumberRange?.value;
+  const onStartGameClick = () => {
+    const minNumberRange = InputMinNumberRange?.value;
     const maxNumberRange = InputMaxNumberRange?.value;
-    const retryCount = InputRetryCount?.value;
+    const maxRetries = InputRetryCount?.value;
 
-    if (!minNumberRange || !maxNumberRange || !retryCount) {
+    if (!minNumberRange || !maxNumberRange || !maxRetries) {
       alert("모든 정보를 채워주세요");
       return;
     }
 
-    SectionGameMain.render();
-
-    game = new Game(
+    startGame(
       Number(minNumberRange),
       Number(maxNumberRange),
-      Number(retryCount)
+      Number(maxRetries)
     );
-  });
+  };
+  SectionGameSettings.elements.btnStartGame?.addEventListener(
+    "click",
+    onStartGameClick
+  );
 
-  // while (true) {
-  //   const [minAllowedNumber, maxAllowedNumber] =
-  //     await Input.getUserAnswerRange();
-  //   const maxRetries = await Input.getUserRetryCount();
-  //   const game = new Game(minAllowedNumber, maxAllowedNumber, maxRetries);
-  //   const answer = game.getAnswer();
-  //   const history = game.getHistory();
-  //   while (history.length < maxRetries) {
-  //     const userNumber = await Input.getUserNumber(
-  //       minAllowedNumber,
-  //       maxAllowedNumber
-  //     );
-  //     game.addToHistory(userNumber);
-  //     if (userNumber === answer) {
-  //       Output.printSuccessMessage(history.length);
-  //       return;
-  //     }
-  //     Output.printDiffMessage(answer, userNumber);
-  //     Output.printHistory(history);
-  //   }
-  //   Output.printExceedRetriesCountMessgae(answer, maxRetries);
-  //   const restartOption = await Input.getUserRestartOption();
-  //   if (!restartOption) {
-  //     break;
-  //   }
-  // }
+  const startGame = (
+    minNumberRange: number,
+    maxNumberRange: number,
+    maxRetries: number
+  ) => {
+    SectionGameMain.render();
+    SectionGameMain.printGameRule(minNumberRange, maxNumberRange);
+
+    const game = new Game(minNumberRange, maxNumberRange, maxRetries);
+
+    const InputUserNumber = SectionGameMain.elements.inputUserNumber;
+    const onUserNumberChange = (e: Event) => {
+      const userNumber = (e.target as HTMLInputElement).value;
+
+      try {
+        Input.validateUserNumber(userNumber, minNumberRange, maxNumberRange);
+      } catch (e) {
+        alert(e);
+
+        if (InputUserNumber) {
+          InputUserNumber.value = "";
+        }
+      }
+    };
+    InputUserNumber?.addEventListener("change", onUserNumberChange);
+
+    const BtnConfirmUserNumber = SectionGameMain.elements.btnConfirmUserNumber;
+    const onConfirmUserNumberClick = () => {
+      if (game.history.includes(game.answer)) {
+        return;
+      }
+
+      if (game.history.length >= maxRetries) {
+        return;
+      }
+
+      const userNumber = InputUserNumber?.value;
+
+      if (!userNumber) {
+        alert("숫자를 먼저 입력하세요.");
+        return;
+      }
+
+      InputUserNumber.value = "";
+
+      SectionGameMain.printUserNumber(userNumber);
+      game.addToHistory(Number(userNumber));
+
+      if (Number(userNumber) === game.answer) {
+        SectionGameMain.printCorrectAnswer(game.history.length);
+      } else {
+        if (game.history.length < maxRetries) {
+          SectionGameMain.printDiff(Number(userNumber), game.answer);
+          SectionGameMain.printAvailableRetries(
+            maxRetries,
+            game.history.length
+          );
+          return;
+        }
+
+        SectionGameMain.printExceedMaxRetries(maxRetries);
+      }
+
+      if (BtnConfirmUserNumber) {
+        BtnConfirmUserNumber.disabled = true;
+      }
+
+      InputUserNumber.disabled = true;
+      SectionGameMain.printFinishGame();
+    };
+    BtnConfirmUserNumber?.addEventListener("click", onConfirmUserNumberClick);
+
+    const BtnRestart = SectionGameMain.elements.btnRestart;
+    const onConfirmRestartGame = () => {
+      endGame();
+      main();
+    };
+    BtnRestart?.addEventListener("click", onConfirmRestartGame);
+
+    const endGame = () => {
+      InputMinNumberRange?.removeEventListener(
+        "change",
+        onMinNumberRangeChange
+      );
+      InputMaxNumberRange?.removeEventListener(
+        "change",
+        onMaxNumberRangeChange
+      );
+      InputRetryCount?.removeEventListener("change", onRetryCountChange);
+      SectionGameSettings.elements.btnStartGame?.removeEventListener(
+        "click",
+        onStartGameClick
+      );
+      InputUserNumber?.removeEventListener("change", onUserNumberChange);
+      BtnConfirmUserNumber?.removeEventListener(
+        "click",
+        onConfirmUserNumberClick
+      );
+      BtnRestart?.removeEventListener("click", onConfirmRestartGame);
+    };
+  };
 };
 
 main();
