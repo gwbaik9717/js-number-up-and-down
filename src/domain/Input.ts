@@ -47,6 +47,10 @@ export const Input = {
       return;
     }
 
+    if (isNaN(Number(minAnswerRange)) || isNaN(Number(maxAnswerRange))) {
+      throw new Error(ErrorMessage.input.WRONG_ANSWER_RANGE);
+    }
+
     if (Number(minAnswerRange) > Number(maxAnswerRange)) {
       throw new Error(ErrorMessage.input.WRONG_ANSWER_RANGE);
     }

@@ -54,10 +54,4 @@ export const SectionGameSettings = {
     const template = SectionGameSettings.getTemplate();
     app.appendChild(template);
   },
-
-  onConfirm: (
-    minUserRange: number,
-    maxUserRange: number,
-    maxRetries: number
-  ) => {},
 };
