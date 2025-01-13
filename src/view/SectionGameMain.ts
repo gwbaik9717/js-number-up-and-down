@@ -28,43 +28,68 @@ export const SectionGameMain = {
     },
   },
 
+  get generateComputerLogMessage() {
+    return SectionGameMain.generateLogMessage("computer");
+  },
+
+  get generateUserLogMessage() {
+    return SectionGameMain.generateLogMessage("user");
+  },
+
+  generateLogMessage: (author: "user" | "computer") => {
+    return (message: string) => {
+      return `[${author === "user" ? "유저" : "컴퓨터"}]: ${message}`;
+    };
+  },
+
   printGameRule: (
     minNumberRange: number | string,
     maxNumberRange: number | string
   ) => {
-    const message = `[컴퓨터]: ${minNumberRange}~${maxNumberRange} 사이의 숫자를 입력하세요.`;
+    const message = SectionGameMain.generateComputerLogMessage(
+      `${minNumberRange}~${maxNumberRange} 사이의 숫자를 입력하세요.`
+    );
     SectionGameMain.addLogItem(message);
   },
 
   printUserNumber: (userNumber: number | string) => {
-    const message = `[유저]: ${userNumber}`;
+    const message = SectionGameMain.generateUserLogMessage(`${userNumber}`);
     SectionGameMain.addLogItem(message);
   },
 
   printDiff: (userNumber: number, answer: number) => {
     const diff = userNumber - answer;
-    const message = `[컴퓨터]: ${diff > 0 ? "다운" : "업"}`;
+    const message = SectionGameMain.generateComputerLogMessage(
+      `${diff > 0 ? "다운" : "업"}`
+    );
     SectionGameMain.addLogItem(message);
   },
 
   printAvailableRetries: (maxRetries: number, currentRetries: number) => {
     const availabeRetries = maxRetries - currentRetries;
-    const message = `[컴퓨터]: ${availabeRetries}회 남았습니다.`;
+    const message = SectionGameMain.generateComputerLogMessage(
+      `${availabeRetries}회 남았습니다.`
+    );
     SectionGameMain.addLogItem(message);
   },
 
   printCorrectAnswer: (currentRetries: number) => {
-    const message = `[컴퓨터]: 축하합니다. ${currentRetries}회 만에 맞추셨네요.`;
+    const message = SectionGameMain.generateComputerLogMessage(
+      `축하합니다. ${currentRetries}회 만에 맞추셨네요.`
+    );
     SectionGameMain.addLogItem(message);
   },
 
   printExceedMaxRetries: (maxRetries: number) => {
-    const message = `[컴퓨터]: 재시도 횟수 ${maxRetries}회를 초과하였습니다.`;
+    const message = SectionGameMain.generateComputerLogMessage(
+      `재시도 횟수 ${maxRetries}회를 초과하였습니다.`
+    );
     SectionGameMain.addLogItem(message);
   },
 
   printFinishGame: () => {
-    const message = `[컴퓨터]: 게임을 종료합니다.`;
+    const message =
+      SectionGameMain.generateComputerLogMessage(`게임을 종료합니다.`);
     SectionGameMain.addLogItem(message);
   },
 
