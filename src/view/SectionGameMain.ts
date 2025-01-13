@@ -1,6 +1,15 @@
 import { $, createElement } from "../utils/dom";
+import { Input } from "../domain/Input";
+import ErrorMessage from "../error";
+import { Game } from "../domain/Game";
 
 export const SectionGameMain = {
+  minNumberRange: 0,
+  maxNumberRange: 0,
+  maxRetries: 0,
+  game: null as Game | null,
+  restartGameCallback: null as (() => void) | null,
+
   elements: {
     get inputUserNumber() {
       return $<HTMLInputElement>("#user-number");
@@ -101,7 +110,16 @@ export const SectionGameMain = {
     return wrapper;
   },
 
-  render: () => {
+  render: (
+    minNumberRange: number,
+    maxNumberRange: number,
+    maxRetries: number
+  ) => {
+    SectionGameMain.minNumberRange = minNumberRange;
+    SectionGameMain.maxNumberRange = maxNumberRange;
+    SectionGameMain.maxRetries = maxRetries;
+    SectionGameMain.game = new Game(minNumberRange, maxNumberRange, maxRetries);
+
     const app = $("#app");
 
     if (!app) {
@@ -111,5 +129,126 @@ export const SectionGameMain = {
     app.innerHTML = "";
     const template = SectionGameMain.getTemplate();
     app.appendChild(template);
+    SectionGameMain.attachEventListeners();
+  },
+
+  setRestartGameCallback: (callback: () => void) => {
+    SectionGameMain.restartGameCallback = callback;
+  },
+
+  attachEventListeners: () => {
+    SectionGameMain.elements.inputUserNumber?.addEventListener(
+      "change",
+      SectionGameMain.onChangeUserNumber
+    );
+    SectionGameMain.elements.btnConfirmUserNumber?.addEventListener(
+      "click",
+      SectionGameMain.onClickConfirmUserNumber
+    );
+    SectionGameMain.elements.btnRestart?.addEventListener(
+      "click",
+      SectionGameMain.onClickRestartGame
+    );
+  },
+
+  detachEventListeners: () => {
+    SectionGameMain.elements.inputUserNumber?.removeEventListener(
+      "change",
+      SectionGameMain.onChangeUserNumber
+    );
+    SectionGameMain.elements.btnConfirmUserNumber?.removeEventListener(
+      "click",
+      SectionGameMain.onClickConfirmUserNumber
+    );
+    SectionGameMain.elements.btnRestart?.removeEventListener(
+      "click",
+      SectionGameMain.onClickRestartGame
+    );
+  },
+
+  onChangeUserNumber: (e: Event) => {
+    const userNumber = (e.target as HTMLInputElement).value;
+
+    try {
+      Input.validateUserNumber(
+        userNumber,
+        SectionGameMain.minNumberRange,
+        SectionGameMain.maxNumberRange
+      );
+    } catch (e) {
+      SectionGameMain.handleError(e);
+      if (SectionGameMain.elements.inputUserNumber) {
+        SectionGameMain.elements.inputUserNumber.value = "";
+      }
+    }
+  },
+
+  onClickConfirmUserNumber: () => {
+    if (!SectionGameMain.game) return;
+
+    if (SectionGameMain.game.history.includes(SectionGameMain.game.answer)) {
+      return;
+    }
+
+    if (SectionGameMain.game.history.length >= SectionGameMain.maxRetries) {
+      return;
+    }
+
+    const userNumber = SectionGameMain.elements.inputUserNumber?.value;
+
+    if (!userNumber) {
+      alert(ErrorMessage.general.ENTER_NUMBER_FIRST);
+      return;
+    }
+
+    if (SectionGameMain.elements.inputUserNumber) {
+      SectionGameMain.elements.inputUserNumber.value = "";
+    }
+
+    SectionGameMain.printUserNumber(userNumber);
+    SectionGameMain.game.addToHistory(Number(userNumber));
+
+    if (Number(userNumber) === SectionGameMain.game.answer) {
+      SectionGameMain.printCorrectAnswer(SectionGameMain.game.history.length);
+    } else {
+      if (SectionGameMain.game.history.length < SectionGameMain.maxRetries) {
+        SectionGameMain.printDiff(
+          Number(userNumber),
+          SectionGameMain.game.answer
+        );
+        SectionGameMain.printAvailableRetries(
+          SectionGameMain.maxRetries,
+          SectionGameMain.game.history.length
+        );
+        return;
+      }
+
+      SectionGameMain.printExceedMaxRetries(SectionGameMain.maxRetries);
+    }
+
+    if (SectionGameMain.elements.btnConfirmUserNumber) {
+      SectionGameMain.elements.btnConfirmUserNumber.disabled = true;
+    }
+
+    if (SectionGameMain.elements.inputUserNumber) {
+      SectionGameMain.elements.inputUserNumber.disabled = true;
+    }
+
+    SectionGameMain.printFinishGame();
+  },
+
+  onClickRestartGame: () => {
+    SectionGameMain.detachEventListeners();
+    if (SectionGameMain.restartGameCallback) {
+      SectionGameMain.restartGameCallback();
+    }
+  },
+
+  handleError: (e: unknown) => {
+    if (e instanceof Error) {
+      alert(e.message);
+    } else {
+      alert(ErrorMessage.general.UNKNOWN_ERROR);
+    }
   },
 };

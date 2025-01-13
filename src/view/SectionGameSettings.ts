@@ -1,6 +1,12 @@
 import { $, createElement } from "../utils/dom";
+import { Input } from "../domain/Input";
+import ErrorMessage from "../error";
 
 export const SectionGameSettings = {
+  startGameCallback: null as
+    | ((min: number, max: number, retries: number) => void)
+    | null,
+
   elements: {
     get inputMinNumberRange() {
       return $<HTMLInputElement>("#min-number-range");
@@ -53,5 +59,123 @@ export const SectionGameSettings = {
     app.innerHTML = "";
     const template = SectionGameSettings.getTemplate();
     app.appendChild(template);
+    SectionGameSettings.attachEventListeners();
+  },
+
+  setStartGameCallback: (
+    callback: (min: number, max: number, retries: number) => void
+  ) => {
+    SectionGameSettings.startGameCallback = callback;
+  },
+
+  attachEventListeners: () => {
+    SectionGameSettings.elements.inputMinNumberRange?.addEventListener(
+      "change",
+      SectionGameSettings.onChangeMinNumberRange
+    );
+    SectionGameSettings.elements.inputMaxNumberRange?.addEventListener(
+      "change",
+      SectionGameSettings.onChangeMaxNumberRange
+    );
+    SectionGameSettings.elements.inputMaxRetries?.addEventListener(
+      "change",
+      SectionGameSettings.onChangeRetryCount
+    );
+    SectionGameSettings.elements.btnStartGame?.addEventListener(
+      "click",
+      SectionGameSettings.onClickStartGame
+    );
+  },
+
+  detachEventListeners: () => {
+    SectionGameSettings.elements.inputMinNumberRange?.removeEventListener(
+      "change",
+      SectionGameSettings.onChangeMinNumberRange
+    );
+    SectionGameSettings.elements.inputMaxNumberRange?.removeEventListener(
+      "change",
+      SectionGameSettings.onChangeMaxNumberRange
+    );
+    SectionGameSettings.elements.inputMaxRetries?.removeEventListener(
+      "change",
+      SectionGameSettings.onChangeRetryCount
+    );
+    SectionGameSettings.elements.btnStartGame?.removeEventListener(
+      "click",
+      SectionGameSettings.onClickStartGame
+    );
+  },
+
+  onChangeMinNumberRange: (e: Event) => {
+    const minNumberRange = (e.target as HTMLInputElement).value;
+    const maxNumberRange =
+      SectionGameSettings.elements.inputMaxNumberRange?.value ?? null;
+
+    try {
+      Input.validateUserAnswerRange(minNumberRange, maxNumberRange);
+    } catch (e) {
+      SectionGameSettings.handleError(e);
+      if (SectionGameSettings.elements.inputMinNumberRange) {
+        SectionGameSettings.elements.inputMinNumberRange.value = "";
+      }
+    }
+  },
+
+  onChangeMaxNumberRange: (e: Event) => {
+    const minNumberRange =
+      SectionGameSettings.elements.inputMinNumberRange?.value ?? null;
+    const maxNumberRange = (e.target as HTMLInputElement).value;
+
+    try {
+      Input.validateUserAnswerRange(minNumberRange, maxNumberRange);
+    } catch (e) {
+      SectionGameSettings.handleError(e);
+      if (SectionGameSettings.elements.inputMaxNumberRange) {
+        SectionGameSettings.elements.inputMaxNumberRange.value = "";
+      }
+    }
+  },
+
+  onChangeRetryCount: (e: Event) => {
+    const maxRetries = (e.target as HTMLInputElement).value;
+
+    try {
+      Input.validateUserRetryCount(maxRetries);
+    } catch (e) {
+      SectionGameSettings.handleError(e);
+      if (SectionGameSettings.elements.inputMaxRetries) {
+        SectionGameSettings.elements.inputMaxRetries.value = "";
+      }
+    }
+  },
+
+  onClickStartGame: () => {
+    const minNumberRange =
+      SectionGameSettings.elements.inputMinNumberRange?.value;
+    const maxNumberRange =
+      SectionGameSettings.elements.inputMaxNumberRange?.value;
+    const maxRetries = SectionGameSettings.elements.inputMaxRetries?.value;
+
+    if (!minNumberRange || !maxNumberRange || !maxRetries) {
+      alert(ErrorMessage.general.FILL_ALL_FIELDS);
+      return;
+    }
+
+    SectionGameSettings.detachEventListeners();
+    if (SectionGameSettings.startGameCallback) {
+      SectionGameSettings.startGameCallback(
+        Number(minNumberRange),
+        Number(maxNumberRange),
+        Number(maxRetries)
+      );
+    }
+  },
+
+  handleError: (e: unknown) => {
+    if (e instanceof Error) {
+      alert(e.message);
+    } else {
+      alert(ErrorMessage.general.UNKNOWN_ERROR);
+    }
   },
 };
