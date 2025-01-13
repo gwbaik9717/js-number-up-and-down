@@ -1,5 +1,6 @@
 import { Game } from "./domain/Game";
 import { Input } from "./domain/Input";
+import ErrorMessage from "./error";
 import { SectionGameMain } from "./view/SectionGameMain";
 import { SectionGameSettings } from "./view/SectionGameSettings";
 
@@ -17,7 +18,11 @@ const renderSettings = () => {
     try {
       Input.validateUserAnswerRange(minNumberRange, maxNumberRange);
     } catch (e) {
-      alert(e);
+      if (e instanceof Error) {
+        alert(e.message);
+      } else {
+        alert(ErrorMessage.general.UNKNOWN_ERROR);
+      }
 
       if (InputMinNumberRange) {
         InputMinNumberRange.value = "";
@@ -32,7 +37,11 @@ const renderSettings = () => {
     try {
       Input.validateUserAnswerRange(minNumberRange, maxNumberRange);
     } catch (e) {
-      alert(e);
+      if (e instanceof Error) {
+        alert(e.message);
+      } else {
+        alert(ErrorMessage.general.UNKNOWN_ERROR);
+      }
 
       if (InputMaxNumberRange) {
         InputMaxNumberRange.value = "";
@@ -46,7 +55,11 @@ const renderSettings = () => {
     try {
       Input.validateUserRetryCount(maxRetries);
     } catch (e) {
-      alert(e);
+      if (e instanceof Error) {
+        alert(e.message);
+      } else {
+        alert(ErrorMessage.general.UNKNOWN_ERROR);
+      }
 
       if (InputRetryCount) {
         InputRetryCount.value = "";
@@ -60,7 +73,7 @@ const renderSettings = () => {
     const maxRetries = InputRetryCount?.value;
 
     if (!minNumberRange || !maxNumberRange || !maxRetries) {
-      alert("모든 정보를 채워주세요");
+      alert(ErrorMessage.general.FILL_ALL_FIELDS);
       return;
     }
 
@@ -109,7 +122,11 @@ const renderMain = (
     try {
       Input.validateUserNumber(userNumber, minNumberRange, maxNumberRange);
     } catch (e) {
-      alert(e);
+      if (e instanceof Error) {
+        alert(e.message);
+      } else {
+        alert(ErrorMessage.general.UNKNOWN_ERROR);
+      }
 
       if (InputUserNumber) {
         InputUserNumber.value = "";
@@ -129,7 +146,7 @@ const renderMain = (
     const userNumber = InputUserNumber?.value;
 
     if (!userNumber) {
-      alert("숫자를 먼저 입력하세요.");
+      alert(ErrorMessage.general.ENTER_NUMBER_FIRST);
       return;
     }
 
