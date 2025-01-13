@@ -24,6 +24,15 @@ export const Input = {
     minAnswerRange: number | string | null,
     maxAnswerRange: number | string | null
   ) => {
+    if (
+      minAnswerRange === "" ||
+      maxAnswerRange === "" ||
+      minAnswerRange === null ||
+      maxAnswerRange === null
+    ) {
+      return;
+    }
+
     if (isNaN(Number(minAnswerRange)) || isNaN(Number(maxAnswerRange))) {
       throw new Error(ErrorMessage.input.WRONG_ANSWER_RANGE_NAN);
     }
